@@ -26,7 +26,6 @@ public class TwitterService {
 
 
     public List<WordItem> handleRequest(String hashTag) throws TwitterException {
-       // String hashTag = createHashtagFromQueryString(tag);
         Twitter twitter = createTwitterInstance();
         TwitterUtil.checkLimits(twitter);
         Query queryMax = createQuery(hashTag);
@@ -35,16 +34,6 @@ public class TwitterService {
 
         return wordItems;
     }
-
-
-//    private String createHashtagFromQueryString(String tag) throws TagInputException {
-//        if (tag != null && tag.length() > 0 && !tag.startsWith("#")) {
-//            LOG.info("Recieved tag: " + tag);
-//            return "#" + tag;
-//        }
-//
-//        throw new TagInputException("You must have the query string 'twitterTag=tagname' set in the url, i.e. don't use '#' in the query");
-//    }
 
 
     private Twitter createTwitterInstance() {
