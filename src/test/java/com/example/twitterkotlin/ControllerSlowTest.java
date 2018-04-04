@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(value = TwitterController.class, secure = false)
-public class ControllerTest {
+public class ControllerSlowTest {
 
     @Autowired
     private MockMvc mockMvc;

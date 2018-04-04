@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-public class TwitterKotlinApplicationNotRunningServerTests {
+public class NotStartingCompleteApplicationSlowTest {
 
     @Autowired
     private MockMvc mockMvc;
