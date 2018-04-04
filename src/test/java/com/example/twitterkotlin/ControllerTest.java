@@ -2,34 +2,25 @@ package com.example.twitterkotlin;
 
 import com.example.twitterkotlin.models.WordItem;
 import com.google.gson.Gson;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockServletContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-
-import javax.servlet.ServletContext;
 
 import java.util.Arrays;
 import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -53,7 +44,7 @@ public class ControllerTest {
     private String expectedJson;
 
     @Before
-    public void init(){
+    public void init() {
         this.words = Arrays.asList(new WordItem("#bieber", new Integer(1)));
         this.expectedJson = new Gson().toJson(words);
     }
@@ -78,11 +69,27 @@ public class ControllerTest {
 
     @Test
     public void integrationTestingWithTheServiceLayer() throws Exception {
-       when(service.handleRequest("#bieber")).thenReturn(words);
+        when(service.handleRequest("#bieber")).thenReturn(words);
 
-        this.mockMvc.perform(get("/sortedTweets?twitterTag=bieber")).andDo(print()).andExpect(status().isOk())
+        this.mockMvc.perform(get("/sortedTweets?twitterTag=bieber"))
+                .andDo(print())
+                .andExpect(status().isOk())
                 .andExpect(content().string(containsString("#bieber")));
     }
+
+    @Test
+    public void shouldVerifyBadInput() throws Exception {
+        String input = "";
+        RequestBuilder requestBuilder = MockMvcRequestBuilders.get(
+                "/sortedTweets?twitterTag=" + input).accept(MediaType.APPLICATION_JSON);
+
+        MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+        assertThat(result.getResponse().getStatus()).isEqualTo(422);
+
+        System.out.println(result.getResponse());
+    }
+
+
 }
 
 

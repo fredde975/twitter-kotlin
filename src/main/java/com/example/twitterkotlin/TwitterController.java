@@ -1,6 +1,8 @@
 package com.example.twitterkotlin;
 
+import com.example.twitterkotlin.exceptions.RateExceededException;
 import com.example.twitterkotlin.exceptions.TagInputException;
+import com.example.twitterkotlin.exceptions.TimeExceededException;
 import com.example.twitterkotlin.models.ErrorResponse;
 import com.example.twitterkotlin.models.WordItem;
 import org.apache.log4j.Logger;
@@ -53,12 +55,17 @@ public class TwitterController {
         HttpStatus status = null;
 
         if (ex instanceof TagInputException) {
-           status =  HttpStatus.UNPROCESSABLE_ENTITY;
-        } else if (ex instanceof TwitterException) {
-           status = HttpStatus.INTERNAL_SERVER_ERROR;
+            status =  HttpStatus.UNPROCESSABLE_ENTITY;
+        } else if (ex instanceof RateExceededException) {
+            status = HttpStatus.TOO_MANY_REQUESTS;
+        } else if(ex instanceof TimeExceededException){
+            status = HttpStatus.GATEWAY_TIMEOUT;
+        } else if(ex instanceof TimeExceededException){
+            status = HttpStatus.GATEWAY_TIMEOUT;
+        }else{
+            status = HttpStatus.SERVICE_UNAVAILABLE;
         }
 
         return  new ResponseEntity<>(error, status);
-
     }
 }
